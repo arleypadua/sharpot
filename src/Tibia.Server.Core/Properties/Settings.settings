@@ -1,0 +1,42 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SharpOT.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DatabaseFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data\sharpot.db</Value>
+    </Setting>
+    <Setting Name="ItemDataFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data\Tibia.dat</Value>
+    </Setting>
+    <Setting Name="WorldName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Utopia</Value>
+    </Setting>
+    <Setting Name="Ip" Type="System.String" Scope="User">
+      <Value Profile="(Default)">127.0.0.1</Value>
+    </Setting>
+    <Setting Name="Port" Type="System.UInt16" Scope="User">
+      <Value Profile="(Default)">7172</Value>
+    </Setting>
+    <Setting Name="MessageOfTheDay" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ScriptsDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data\Scripts</Value>
+    </Setting>
+    <Setting Name="ItemsXmlFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data\items.xml</Value>
+    </Setting>
+    <Setting Name="ItemsOtbFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data\items.otb</Value>
+    </Setting>
+    <Setting Name="SchemaFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data\sharpot.sql</Value>
+    </Setting>
+    <Setting Name="ClientVersion" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">854</Value>
+    </Setting>
+    <Setting Name="WelcomeMessage" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Welcome to {0}, {1}!</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

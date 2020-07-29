@@ -1,0 +1,15 @@
+﻿namespace Tibia.Server.Core.Packets.Server
+{
+    public class TileRemoveThingPacket : Packet
+    {
+        public static void Add(NetworkMessage message, Location fromLocation, byte fromStackPosition)
+        {
+            if (fromStackPosition < 10)
+            {
+                message.AddByte((byte)ServerPacketType.TileRemoveThing);
+                message.AddLocation(fromLocation);
+                message.AddByte(fromStackPosition);
+            }
+        }
+    }
+}

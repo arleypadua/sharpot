@@ -1,0 +1,23 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Tibia.Server.Core.Packets.Server
+{
+    public class OutfitWindowPacket : Packet
+    {
+        public static void Add(NetworkMessage message, Player player, IEnumerable<Outfit> outfits)
+        {
+            message.AddByte((byte)ServerPacketType.OutfitWindow);
+            message.AddOutfit(player.Outfit);
+            
+            message.AddByte((byte)outfits.Count());
+
+            foreach (Outfit outfit in outfits)
+            {
+                message.AddUInt16((ushort)outfit.LookType);
+                message.AddString(outfit.Name);
+                message.AddByte(outfit.Addons);
+            }
+        }
+    }
+}
