@@ -46,7 +46,7 @@ namespace Tibia.Server.Core
                 LogDone();
 
                 LogStart("Loading scripts");
-                string errors = Scripting.ScriptManager.LoadAllScripts(game);
+                string errors = ScriptManager.LoadAllScripts(game);
                 LogDone();
 
                 if (errors.Length > 0)

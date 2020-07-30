@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Tibia.Server.Core.Data.Scripts;
 using Tibia.Server.Core.Properties;
 
 namespace Tibia.Server.Core.Scripting
@@ -21,7 +22,7 @@ namespace Tibia.Server.Core.Scripting
         public static string LoadAllScripts(Game game)
         {
             // load scripts from the current assembly
-            LoadScript(game, System.Reflection.Assembly.GetExecutingAssembly().Location);
+            LoadScript(game, Assembly.GetExecutingAssembly());
 
             errorLog = new StringBuilder();
             foreach (string directory in Settings.Default.ScriptsDirectory.Split(';'))
@@ -69,6 +70,11 @@ namespace Tibia.Server.Core.Scripting
                     break;
             }
 
+            LoadScript(game, assembly);
+        }
+
+        public static void LoadScript(Game game, Assembly assembly)
+        {
             if (assembly != null)
             {
                 foreach (IScript script in FindInterfaces<IScript>(assembly))
@@ -117,9 +123,11 @@ namespace Tibia.Server.Core.Scripting
         {
             foreach (Type t in assembly.GetTypes())
             {
-                if (t.GetInterface(typeof(IType).Name, true) != null && !t.IsInterface && !t.IsAbstract)
+                if (typeof(IType).IsAssignableFrom(t)
+                    && !t.IsInterface
+                    && !t.IsAbstract)
                 {
-                    yield return (IType)assembly.CreateInstance(t.FullName);
+                    yield return (IType) Activator.CreateInstance(t);
                 }
             }
         }

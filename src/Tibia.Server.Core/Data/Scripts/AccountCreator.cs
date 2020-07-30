@@ -4,7 +4,7 @@ using Tibia.Server.Core.Scripting;
 
 namespace Tibia.Server.Core.Data.Scripts
 {
-    public class AccountCreator:IScript
+    public class AccountCreator : IScript
     {
         Game game;
         Dictionary<Connection, CreationInfo> creators = new Dictionary<Connection, CreationInfo>();
@@ -91,7 +91,7 @@ namespace Tibia.Server.Core.Data.Scripts
             return true;
         }
 
-        private void Parse(Connection connection,DialogueState state, Speech speech)
+        private void Parse(Connection connection, DialogueState state, Speech speech)
         {
             switch (state)
             {
