@@ -16,19 +16,19 @@ namespace Tibia.Server.Core
             new Server().Run();
         }
 
-        Game game;
+        Game _game;
 
-        TcpListener clientLoginListener = new TcpListener(IPAddress.Any, 7171);
-        TcpListener clientGameListener = new TcpListener(IPAddress.Any, 7172);
+        readonly TcpListener _clientLoginListener = new TcpListener(IPAddress.Any, 7171);
+        readonly TcpListener _clientGameListener = new TcpListener(IPAddress.Any, 7172);
 
-        List<Connection> connections = new List<Connection>();
+        readonly List<Connection> _connections = new List<Connection>();
 
-        static int startTimeInMillis = 0;
-        static int startTextLength = 0;
+        static int _startTimeInMillis = 0;
+        static int _startTextLength = 0;
 
         void Run()
         {
-            game = new Game();
+            _game = new Game();
 
             try
             {
@@ -42,11 +42,11 @@ namespace Tibia.Server.Core
                 LogDone();
 
                 LogStart("Loading map");
-                game.Map.Load();
+                _game.Map.Load();
                 LogDone();
 
                 LogStart("Loading scripts");
-                string errors = ScriptManager.LoadAllScripts(game);
+                string errors = ScriptManager.LoadAllScripts(_game);
                 LogDone();
 
                 if (errors.Length > 0)
@@ -55,10 +55,10 @@ namespace Tibia.Server.Core
                 }
 
                 LogStart("Listening for clients");
-                clientLoginListener.Start();
-                clientLoginListener.BeginAcceptSocket(new AsyncCallback(LoginListenerCallback), clientLoginListener);
-                clientGameListener.Start();
-                clientGameListener.BeginAcceptSocket(new AsyncCallback(GameListenerCallback), clientGameListener);
+                _clientLoginListener.Start();
+                _clientLoginListener.BeginAcceptSocket(LoginListenerCallback, _clientLoginListener);
+                _clientGameListener.Start();
+                _clientGameListener.BeginAcceptSocket(GameListenerCallback, _clientGameListener);
                 LogDone();
             }
             catch (Exception e)
@@ -80,40 +80,40 @@ namespace Tibia.Server.Core
                         exit = true;
                         break;
                     case "reloadscripts":
-                        ScriptManager.ReloadAllScripts(game);
+                        ScriptManager.ReloadAllScripts(_game);
                         break;
                 }
                 if (exit) break;
             }
-            connections.ForEach(c => c.Close());
-            clientGameListener.Stop();
-            clientLoginListener.Stop();
+            _connections.ForEach(c => c.Close());
+            _clientGameListener.Stop();
+            _clientLoginListener.Stop();
         }
 
         public static void LogStart(string text)
         {
             string s = String.Format("{0}: {1}...", DateTime.Now, text);
             Console.Write(s);
-            startTextLength = s.Length;
-            startTimeInMillis = System.Environment.TickCount;
+            _startTextLength = s.Length;
+            _startTimeInMillis = System.Environment.TickCount;
         }
 
         public static void LogDone()
         {
-            int elapsed = System.Environment.TickCount - startTimeInMillis;
+            int elapsed = System.Environment.TickCount - _startTimeInMillis;
             string done = "Done";
             string doneTime = "";
 
             if (elapsed < 1000)
             {
-                doneTime = String.Format("({0} ms)", elapsed);
+                doneTime = $"({elapsed} ms)";
             }
             else
             {
-                doneTime = String.Format("({0:0.00} s)", elapsed / 1000.0);
+                doneTime = $"({elapsed / 1000.0:0.00} s)";
             }
 
-            Console.Write(".".Repeat(Console.WindowWidth - startTextLength - done.Length - 12));
+            Console.Write(".".Repeat(Console.WindowWidth - _startTextLength - done.Length - 12));
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write(done);
             Console.ResetColor();
@@ -125,7 +125,7 @@ namespace Tibia.Server.Core
         public static void LogError(string errorText)
         {
             string error = "Error";
-            Console.Write(".".Repeat(Console.WindowWidth - startTextLength - error.Length - 12));
+            Console.Write(".".Repeat(Console.WindowWidth - _startTextLength - error.Length - 12));
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(error);
             Console.ResetColor();
@@ -139,21 +139,21 @@ namespace Tibia.Server.Core
 
         private void LoginListenerCallback(IAsyncResult ar)
         {
-            Connection connection = new Connection(game);
+            Connection connection = new Connection(_game);
             connection.LoginListenerCallback(ar);
-            connections.Add(connection);
+            _connections.Add(connection);
 
-            clientLoginListener.BeginAcceptSocket(new AsyncCallback(LoginListenerCallback), clientLoginListener);
+            _clientLoginListener.BeginAcceptSocket(new AsyncCallback(LoginListenerCallback), _clientLoginListener);
             Log("New client connected to login server.");
         }
 
         private void GameListenerCallback(IAsyncResult ar)
         {
-            Connection connection = new Connection(game);
+            Connection connection = new Connection(_game);
             connection.GameListenerCallback(ar);
-            connections.Add(connection);
+            _connections.Add(connection);
 
-            clientGameListener.BeginAcceptSocket(new AsyncCallback(GameListenerCallback), clientGameListener);
+            _clientGameListener.BeginAcceptSocket(new AsyncCallback(GameListenerCallback), _clientGameListener);
             Log("New client connected to game server.");
         }
     }
